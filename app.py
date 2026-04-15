@@ -2,83 +2,76 @@ import streamlit as st
 import sys
 from io import StringIO
 
-# Configuración de la página
-st.set_page_config(page_title="Certificación Final Python - UTS", page_icon="🎓", layout="wide")
+st.header("🛠️ Fase Práctica: Laboratorios de Desempeño Nexan")
+st.info("Instrucciones: Completa los espacios vacíos en el código para resolver los problemas de ingeniería. Al finalizar, presiona el botón de validación.")
 
-# Estilos personalizados (Toque Nexan)
+# --- RETO 1: FILTRADO DE MATRICES ---
+st.subheader("Reto 1: Monitor de Seguridad Crítica")
 st.markdown("""
-    <style>
-    .main { background-color: #f5f7f9; }
-    .stButton>button { width: 100%; border-radius: 5px; height: 3em; background-color: #007bff; color: white; }
-    </style>
-    """, unsafe_allow_html=True)
+**Escenario:** Debes filtrar una matriz de servidores y mostrar solo aquellos con **Temperatura > 70** y **Carga > 80**.
+""")
 
-st.title("🏆 Evaluación Final de Certificación: Pensamiento Computacional")
-st.write(f"**Docente:** Nelber Andreiv Montaguth Useche | **Institución:** UTS")
+codigo_reto_1 = st.text_area("Editor de Código - Reto 1:", value="""servidores = [[101, "WEB", 65, 85], [102, "DB", 75, 90], [103, "APP", 80, 82]]
 
-# --- SECCIÓN 1: REPASO RÁPIDO Y TEORÍA ---
-with st.expander("📚 Haz clic aquí para repasar los conceptos clave antes de iniciar"):
-    st.markdown("""
-    ### 🏗️ Recordatorio de Ingeniería:
-    * **Variables:** Cajas donde guardamos datos (`int`, `float`, `str`).
-    * **Condicionales:** El `if` evalúa verdades para tomar decisiones.
-    * **Bucles:** El `for` cuenta, el `while` espera una condición.
-    * **Matrices:** Tablas de datos organizadas por `[fila][columna]`.
-    """)
+print("Servidores Críticos:")
+for s in servidores:
+    temp = s[2]
+    carga = s[3]
+    
+    # COMPLETA LA CONDICIÓN LÓGICA AQUÍ:
+    if temp > 70 and carga > 80:
+        print(f"- {s[1]}")
+""", height=200)
 
-# --- SECCIÓN 2: RETOS PRÁCTICOS (Interacción Directa) ---
-st.header("🛠️ Fase 1: Desafíos de Código en Vivo")
-st.info("Completa el código y presiona 'Validar' para avanzar.")
-
-# Reto de Matrices y Acumuladores
-st.subheader("Reto: El Liquidador Nexan")
-st.write("Calcula la comisión del 15% para el servicio de mayor valor en la matriz.")
-
-codigo_estudiante = st.text_area("Escribe tu código aquí:", value="""servicios = [["Mantenimiento", 50000], ["Redes", 200000]]
-# Tu misión: Calcular el 15% del segundo servicio
-total = servicios[1][1] * 0.15
-print(f"COMISION:{total}")""", height=150)
-
-if st.button("Validar Reto Práctico"):
+if st.button("Validar Reto 1"):
     output = StringIO()
     sys.stdout = output
     try:
-        exec(codigo_estudiante)
+        exec(codigo_reto_1)
         sys.stdout = sys.__stdout__
-        if "COMISION:30000.0" in output.getvalue():
-            st.success("✅ ¡Excelente! Has dominado la extracción de datos y el cálculo porcentual.")
-            st.balloons()
+        resultado = output.getvalue()
+        if "- DB" in resultado and "- APP" in resultado:
+            st.success("✅ ¡Excelente! Filtro lógico aplicado correctamente.")
         else:
-            st.error("❌ El resultado no es correcto. Revisa el índice de la matriz o el cálculo.")
+            st.error("❌ El filtro no muestra los servidores correctos. Revisa los operadores > y el conector 'and'.")
     except Exception as e:
-        st.error(f"⚠️ Error en el código: {e}")
+        st.error(f"⚠️ Error: {e}")
 
 st.divider()
 
-# --- SECCIÓN 3: CUESTIONARIO DE SELECCIÓN (Post-Test) ---
-st.header("📝 Fase 2: Examen de Conocimientos")
+# --- RETO 2: INTEGRACIÓN TOTAL (ACUMULADORES) ---
+st.subheader("Reto 2: Liquidador de Comisiones")
+st.markdown("""
+**Escenario:** Calcula la comisión total para técnicos categoría 'A' (15%). 
+Debes usar un **acumulador** dentro del ciclo.
+""")
 
-with st.form("quiz_final"):
-    p1 = st.radio("1. En la empresa Nexan, ¿qué tipo de dato usarías para el stock (unidades enteras)?", ["Float", "String", "Int"])
+codigo_reto_2 = st.text_area("Editor de Código - Reto 2:", value="""servicios = [[1, "A", 500000], [2, "B", 200000], [3, "A", 300000]]
+total_comision = 0
+
+for reg in servicios:
+    cat = reg[1]
+    valor = reg[2]
     
-    p2 = st.radio("2. ¿Qué instrucción permite romper un bucle infinito de forma segura?", ["continue", "break", "if"])
-    
-    p3 = st.radio("3. Si una matriz es de 3x3, ¿cuál es el índice de la última celda?", ["[3][3]", "[2][2]", "[0][0]"])
-    
-    submitted = st.form_submit_button("Finalizar y Enviar Evaluación")
-    
-    if submitted:
-        puntos = 0
-        if p1 == "Int": puntos += 1
-        if p2 == "break": puntos += 1
-        if p3 == "[2][2]": puntos += 1
-        
-        st.subheader(f"Tu puntaje final es: {puntos}/3")
-        if puntos == 3:
-            st.success("⭐ ¡Nivel Ingeniero Senior alcanzado!")
+    if cat == "A":
+        # COMPLETA EL ACUMULADOR (Suma el 15% del valor):
+        total_comision += valor * 0.15
+
+print(f"TOTAL: {total_comision}")
+""", height=220)
+
+if st.button("Validar Reto Final"):
+    output = StringIO()
+    sys.stdout = output
+    try:
+        exec(codigo_reto_2)
+        sys.stdout = sys.__stdout__
+        resultado = output.getvalue()
+        # El resultado esperado es (500000*0.15) + (300000*0.15) = 75000 + 45000 = 120000
+        if "TOTAL: 120000.0" in resultado:
+            st.success("✅ ¡BRONCE, PLATA Y ORO! Has completado la certificación práctica de Nexan.")
+            st.balloons()
         else:
-            st.warning("Te recomendamos repasar los conceptos de índices y bucles.")
-
-# Pie de página
-st.markdown("---")
-st.caption("Recurso Digital diseñado para el fortalecimiento del Pensamiento Computacional - Proyecto de Maestría UDI.")
+            st.error("❌ El cálculo de la comisión es incorrecto. Revisa la fórmula del acumulador.")
+    except Exception as e:
+        st.error(f"⚠️ Error: {e}")
