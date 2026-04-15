@@ -30,3 +30,47 @@ if st.button("Validar Reto 1"):
             st.error("❌ El resultado no coincide. Revisa el operador 'or' y los índices.")
     except Exception as e:
         st.error(f"⚠️ Error: {e}")
+
+
+st.subheader("🏆 Reto Final: Sistema Integrado de Comisiones Nexan")
+st.markdown("""
+**Instrucciones:** Escribe un código completo que:
+1. Recorra la matriz `datos`.
+2. Identifique si el técnico es **'A'** o **'B'**.
+3. Sume la comisión correspondiente en dos variables diferentes (`total_a` y `total_b`).
+4. Al final, imprime exactamente: `A: [valor]` y `B: [valor]`.
+""")
+
+# Dejamos el área de texto CASI vacía para que él construya todo
+code_final = st.text_area("Editor de Código - Reto Final (Escritura Total):", value="""datos = [
+    ["A", 1000000],
+    ["B", 500000],
+    ["A", 2000000],
+    ["B", 800000]
+]
+
+# Inicializa tus acumuladores:
+
+# Escribe el ciclo for:
+
+# Escribe la lógica condicional y cálculos:
+
+# Imprime los resultados con el formato A: valor y B: valor
+""", height=350)
+
+if st.button("Finalizar Certificación"):
+    output = StringIO()
+    sys.stdout = output
+    try:
+        exec(code_final)
+        sys.stdout = sys.__stdout__
+        res = output.getvalue()
+        
+        # Validación: A=(1M+2M)*0.15 = 450.000 | B=(0.5M+0.8M)*0.05 = 65.000
+        if "A: 450000.0" in res and "B: 65000.0" in res:
+            st.success("⭐ ¡CERTIFICACIÓN COMPLETA! Has demostrado dominio total de estructuras y lógica.")
+            st.balloons()
+        else:
+            st.warning("⚠️ El código ejecutó, pero los totales no son correctos. Revisa los acumuladores.")
+    except Exception as e:
+        st.error(f"⚠️ Error Crítico en la estructura: {e}")
