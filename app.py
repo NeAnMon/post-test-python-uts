@@ -2,20 +2,29 @@ import streamlit as st
 import sys
 from io import StringIO
 
-st.subheader("🚀 Reto 1: Filtro de Alerta Temprana")
-st.markdown("""
-Escribe el código para recorrer la matriz `servidores` e imprimir el nombre de aquellos que cumplan: **Temperatura > 75** O **Carga > 90**.
-""")
+# 1. Configuración inicial de la página
+st.set_page_config(page_title="Certificación Práctica - Nexan", page_icon="💻")
 
-# Código inicial para el estudiante
+# 2. Inicializar el sistema de puntos en el estado de la sesión
+if 'puntos_reto1' not in st.session_state:
+    st.session_state.puntos_reto1 = 0.0
+if 'puntos_reto2' not in st.session_state:
+    st.session_state.puntos_reto2 = 0.0
+
+st.title("🏆 Evaluación de Desempeño Práctico")
+st.markdown("---")
+
+# --- RETO 1: ANÁLISIS DE INFRAESTRUCTURA ---
+st.header("🚀 Reto 1: Filtro de Alerta (Valor: 2.5)")
+st.write("Misión: Imprime los nombres de los servidores con Temperatura > 75 o Carga > 90.")
+
 code_1 = st.text_area("Editor de Código - Reto 1:", value="""servidores = [
     [101, "DB-Principal", 78, 85],
     [102, "Web-Mirror", 60, 95],
     [103, "Backup-SRV", 65, 40]
 ]
-
-# Escribe tu ciclo y condicional aquí abajo:
-""", height=200)
+# Escribe tu lógica aquí:
+""", height=200, key="editor1")
 
 if st.button("Validar Reto 1"):
     output = StringIO()
@@ -25,52 +34,54 @@ if st.button("Validar Reto 1"):
         sys.stdout = sys.__stdout__
         res = output.getvalue()
         if "DB-Principal" in res and "Web-Mirror" in res:
-            st.success("✅ ¡Filtro lógico correcto! Has manejado operadores compuestos.")
+            st.session_state.puntos_reto1 = 2.5
+            st.success("✅ Reto 1 superado. Puntos obtenidos: 2.5")
         else:
-            st.error("❌ El resultado no coincide. Revisa el operador 'or' y los índices.")
+            st.session_state.puntos_reto1 = 0.0
+            st.error("❌ El resultado no es correcto. Revisa la lógica.")
     except Exception as e:
         st.error(f"⚠️ Error: {e}")
 
+st.markdown("---")
 
-st.subheader("🏆 Reto Final: Sistema Integrado de Comisiones Nexan")
-st.markdown("""
-**Instrucciones:** Escribe un código completo que:
-1. Recorra la matriz `datos`.
-2. Identifique si el técnico es **'A'** o **'B'**.
-3. Sume la comisión correspondiente en dos variables diferentes (`total_a` y `total_b`).
-4. Al final, imprime exactamente: `A: [valor]` y `B: [valor]`.
-""")
+# --- RETO 2: LIQUIDADOR DE NÓMINA ---
+st.header("🏆 Reto 2: Sistema de Comisiones (Valor: 2.5)")
+st.write("Misión: Calcula comisiones (A: 15%, B: 5%) e imprime A: [valor] y B: [valor].")
 
-# Dejamos el área de texto CASI vacía para que él construya todo
-code_final = st.text_area("Editor de Código - Reto Final (Escritura Total):", value="""datos = [
-    ["A", 1000000],
-    ["B", 500000],
-    ["A", 2000000],
-    ["B", 800000]
-]
+code_2 = st.text_area("Editor de Código - Reto 2:", value="""datos = [["A", 1000000], ["B", 500000]]
+# Escribe tu lógica aquí:
+""", height=250, key="editor2")
 
-# Inicializa tus acumuladores:
-
-# Escribe el ciclo for:
-
-# Escribe la lógica condicional y cálculos:
-
-# Imprime los resultados con el formato A: valor y B: valor
-""", height=350)
-
-if st.button("Finalizar Certificación"):
+if st.button("Validar Reto Final"):
     output = StringIO()
     sys.stdout = output
     try:
-        exec(code_final)
+        exec(code_2)
         sys.stdout = sys.__stdout__
         res = output.getvalue()
-        
-        # Validación: A=(1M+2M)*0.15 = 450.000 | B=(0.5M+0.8M)*0.05 = 65.000
-        if "A: 450000.0" in res and "B: 65000.0" in res:
-            st.success("⭐ ¡CERTIFICACIÓN COMPLETA! Has demostrado dominio total de estructuras y lógica.")
+        if "A: 150000.0" in res and "B: 25000.0" in res:
+            st.session_state.puntos_reto2 = 2.5
+            st.success("✅ Reto 2 superado. Puntos obtenidos: 2.5")
             st.balloons()
         else:
-            st.warning("⚠️ El código ejecutó, pero los totales no son correctos. Revisa los acumuladores.")
+            st.session_state.puntos_reto2 = 0.0
+            st.error("❌ Los totales no coinciden. Revisa los cálculos.")
     except Exception as e:
-        st.error(f"⚠️ Error Crítico en la estructura: {e}")
+        st.error(f"⚠️ Error: {e}")
+
+# --- SECCIÓN DE RESULTADO TOTAL ---
+st.markdown("---")
+st.header("📊 Resultado Final de la Prueba Práctica")
+
+# Calcular el total
+total_practica = st.session_state.puntos_reto1 + st.session_state.puntos_reto2
+
+# Mostrar el puntaje con un diseño llamativo
+st.metric(label="Puntaje Total Práctico", value=f"{total_practica} / 5.0")
+
+if total_practica >= 3.0:
+    st.success("🎉 ¡Felicidades! Has aprobado la sección práctica.")
+else:
+    st.warning("Te recomendamos revisar los temas de ciclos y matrices antes de intentar nuevamente.")
+
+st.info("💡 Ingeniero: Toma una captura de pantalla de este resultado para reportar tu nota final.")
