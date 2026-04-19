@@ -59,9 +59,8 @@ if st.button("Validar Reto Final"):
         exec(code_2)
         sys.stdout = sys.__stdout__
         res = output.getvalue()
-        if "A: 150000.0" in res and "B: 25000.0" in res:
-            st.session_state.puntos_reto2 = 2.5
-            st.success("✅ Reto 2 superado. Puntos obtenidos: 2.5")
+       if "450000" in res and "65000" in res:
+            st.success("⭐ ¡CERTIFICACIÓN COMPLETA!")
             st.balloons()
         else:
             st.session_state.puntos_reto2 = 0.0
